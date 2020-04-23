@@ -1,6 +1,6 @@
 # SFND 2D Feature Tracking
 
-<img src="../images/keypoints.png" width="820" height="248" />
+<img src="images/keypoints.png" width="820" height="248" />
 
 The idea of the camera course is to build a collision detection system - that's the overall goal for the Final Project. As a preparation for this, you will now build the feature tracking part and test various detector / descriptor combinations to see which ones perform best. This mid-term project consists of four parts:
 
@@ -50,7 +50,7 @@ A rectangle is defined, so points that are inside of the rectanle are inserted.
       if (vehicleRect.contains(kp.pt)) keypointsInside.push_back(kp);
   }
   keypoints = keypointsInside;
-<img src="images/inCube.png" width="820"  />
+<img src="imgDoc/inCube.png" width="820"  />
 Implemented in lines 108 to 112 of MidTermProjectCamera_Student.cpp
 
 ## Dependencies for Running Locally
