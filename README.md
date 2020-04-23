@@ -15,12 +15,13 @@ See the classroom instruction and code comments for more details on each of thes
 Implement circular vector.
 The first approach is to erase the first element each time a new one over dataBufferSize
 So finally:
+```c_cpp
 if (dataBuffer.size() >=dataBufferSize) // wait until at least two images have been processed
 {
     dataBuffer.erase(dataBuffer.begin());
 }
 dataBuffer.push_back(frame);
-
+```
 Implemented in lines 65 to 69 of MidTermProjectCamera_Student.cpp
 
 ## Task MP.2 Keypoint Detectors
@@ -46,17 +47,33 @@ Since the name cant be mistyped there are only 3 options Shitomasi, Harris or mo
       detKeypointsModern(keypoints, imgGray,detectorType, bVis);
   }
 ```
+I have had problems with FREAK, because it needs a third parameters that I unknow. I have use a matrix so the code runs, but I think its not the best way.
+
 ## Task MP.3 Box Filtering 
 only keep keypoints on the preceding vehicle
 A rectangle is defined, so points that are inside of the rectanle are inserted.
-
+```c_cpp
 vector<cv::KeyPoint> keypointsInside;
 for (auto kp : keypoints) {
   if (vehicleRect.contains(kp.pt)) keypointsInside.push_back(kp);
 }
 keypoints = keypointsInside;
+```
 <img src="imgDoc/inCube.png" width="820"  />
+
 Implemented in lines 108 to 112 of MidTermProjectCamera_Student.cpp
+## Task MP.4 Descriptors
+Add the following descriptors in file matching2D.cpp and enable string-based selection based on descriptorType
+   BRISK, BRIEF, ORB, FREAK, AKAZE, SIFT
+
+Like in MP.2 an array is used so cant be mistyped.
+```c_cpp
+        string descriptorTypes[]={"BRISK", "BRIEF", "ORB", "FREAK", "AKAZE", "SIFT"};
+        string descriptorType = descriptorTypes[5];
+```
+The methods are implemented in matching2D_Student.cpp.
+After all the implementations, I have had some problems with the AKAZE descriptor, since I have seen that it seems that only can be used with the AKAZE key point detector.
+
 
 ## Dependencies for Running Locally
 * cmake >= 2.8

@@ -80,7 +80,7 @@ int main(int argc, const char *argv[])
         //// TASK MP.2 -> add the following keypoint detectors in file matching2D.cpp and enable string-based selection based on detectorType
         //// -> HARRIS, SHITOMASI, FAST, BRISK, ORB, AKAZE, FREAK, SIFT
         string detectorTypes[]={"HARRIS", "SHITOMASI", "FAST", "BRISK", "ORB", "AKAZE", "FREAK", "SIFT"};
-        string detectorType = detectorTypes[4];
+        string detectorType = detectorTypes[6];
         if (detectorType.compare("SHITOMASI") == 0)
         {
             detKeypointsShiTomasi(keypoints, imgGray, bVis);
@@ -140,7 +140,7 @@ int main(int argc, const char *argv[])
 
         cv::Mat descriptors;
         string descriptorTypes[]={"BRISK", "BRIEF", "ORB", "FREAK", "AKAZE", "SIFT"};
-        string descriptorType = descriptorTypes[4];
+        string descriptorType = descriptorTypes[5];
         //string descriptorType = "BRISK"; // BRISK, BRIEF, ORB, FREAK, AKAZE, SIFT
         descKeypoints((dataBuffer.end() - 1)->keypoints, (dataBuffer.end() - 1)->cameraImg, descriptors, descriptorType);
         //// EOF STUDENT ASSIGNMENT

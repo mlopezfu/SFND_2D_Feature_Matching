@@ -214,6 +214,10 @@ void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, std:
         auto akaze = cv::AKAZE::create();
         akaze->detect(img, keypoints);
     }
+    else if (detectorType.compare("FREAK") == 0) {
+        auto freak = cv::xfeatures2d::FREAK::create();
+        freak->compute(img, keypoints,img);
+    }
     else if (detectorType.compare("SIFT") == 0) {
         auto sift = cv::xfeatures2d::SIFT::create();
         sift->detect(img, keypoints);
