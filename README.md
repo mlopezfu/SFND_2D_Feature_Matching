@@ -22,7 +22,9 @@ if (dataBuffer.size() >=dataBufferSize) // wait until at least two images have b
 dataBuffer.push_back(frame);
 
 Implemented in lines 65 to 69 of MidTermProjectCamera_Student.cpp
+
 ## Task MP.2 Keypoint Detectors
+
 add the following keypoint detectors in file matching2D.cpp and enable string-based selection based on detectorType
  HARRIS, SHITOMASI, FAST, BRISK, ORB, AKAZE, FREAK, SIFT
  First we create an array of detector names
@@ -30,6 +32,7 @@ add the following keypoint detectors in file matching2D.cpp and enable string-ba
  A name is selected by selecting an array member by number from 0 of Harris to 6 of SIFT
  string detectorType = detectorTypes[4];
 Since the name cant be mistyped there are only 3 options Shitomasi, Harris or modern.
+```c_cpp
   if (detectorType.compare("SHITOMASI") == 0)
   {
       detKeypointsShiTomasi(keypoints, imgGray, bVis);
@@ -42,14 +45,16 @@ Since the name cant be mistyped there are only 3 options Shitomasi, Harris or mo
   {
       detKeypointsModern(keypoints, imgGray,detectorType, bVis);
   }
+```
 ## Task MP.3 Box Filtering 
 only keep keypoints on the preceding vehicle
 A rectangle is defined, so points that are inside of the rectanle are inserted.
-  vector<cv::KeyPoint> keypointsInside;
-  for (auto kp : keypoints) {
-      if (vehicleRect.contains(kp.pt)) keypointsInside.push_back(kp);
-  }
-  keypoints = keypointsInside;
+
+vector<cv::KeyPoint> keypointsInside;
+for (auto kp : keypoints) {
+  if (vehicleRect.contains(kp.pt)) keypointsInside.push_back(kp);
+}
+keypoints = keypointsInside;
 <img src="imgDoc/inCube.png" width="820"  />
 Implemented in lines 108 to 112 of MidTermProjectCamera_Student.cpp
 
