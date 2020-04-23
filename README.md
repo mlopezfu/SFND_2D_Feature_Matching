@@ -62,7 +62,9 @@ keypoints = keypointsInside;
 <img src="imgDoc/inCube.png" width="820"  />
 
 Implemented in lines 108 to 112 of MidTermProjectCamera_Student.cpp
+
 ## Task MP.4 Descriptors
+
 Add the following descriptors in file matching2D.cpp and enable string-based selection based on descriptorType
    BRISK, BRIEF, ORB, FREAK, AKAZE, SIFT
 
