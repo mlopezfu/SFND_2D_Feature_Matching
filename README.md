@@ -11,7 +11,7 @@ The idea of the camera course is to build a collision detection system - that's 
 
 See the classroom instruction and code comments for more details on each of these parts. Once you are finished with this project, the keypoint matching part will be set up and you can proceed to the next lesson, where the focus is on integrating Lidar points and on object detection using deep-learning.
 
-##Task MP.1 The data buffer
+## Task MP.1 The data buffer
 Implement circular vector.
 The first approach is to erase the first element each time a new one over dataBufferSize
 So finally:
@@ -42,7 +42,7 @@ Since the name cant be mistyped there are only 3 options Shitomasi, Harris or mo
   {
       detKeypointsModern(keypoints, imgGray,detectorType, bVis);
   }
-##Task MP.3 Box Filtering 
+## Task MP.3 Box Filtering 
 only keep keypoints on the preceding vehicle
 A rectangle is defined, so points that are inside of the rectanle are inserted.
   vector<cv::KeyPoint> keypointsInside;
