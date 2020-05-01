@@ -84,9 +84,6 @@ matcher = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
 ## TASK MP.6 add KNN match selection 
 and perform descriptor distance ratio filtering with t=0.8 in file matching2D.cpp
 
-## TASK MP.6 add KNN match selection 
-and perform descriptor distance ratio filtering with t=0.8 in file matching2D.cpp
-
 ## Task MP.7
 Your seventh task is to count the number of keypoints on the preceding vehicle for all 10 images and take note of the distribution of their neighborhood size. Do this for all the detectors you have implemented.
 
