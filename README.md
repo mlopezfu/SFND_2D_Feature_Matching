@@ -75,6 +75,18 @@ Like in MP.2 an array is used so cant be mistyped.
 ```
 The methods are implemented in matching2D_Student.cpp.
 After all the implementations, I have had some problems with the AKAZE descriptor, since I have seen that it seems that only can be used with the AKAZE key point detector.
+
+## Task MP.5 add FLANN matching 
+in file matching2D.cpp from open cv docs
+```c_cpp
+matcher = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
+```
+## TASK MP.6 add KNN match selection 
+and perform descriptor distance ratio filtering with t=0.8 in file matching2D.cpp
+
+## TASK MP.6 add KNN match selection 
+and perform descriptor distance ratio filtering with t=0.8 in file matching2D.cpp
+
 ## Task MP.7
 Your seventh task is to count the number of keypoints on the preceding vehicle for all 10 images and take note of the distribution of their neighborhood size. Do this for all the detectors you have implemented.
 
@@ -84,16 +96,7 @@ Your eighth task is to count the number of matched keypoints for all 10 images u
 
 ## Task MP.9
 Your ninth task is to log the time it takes for keypoint detection and descriptor extraction. The results must be entered into a spreadsheet and based on this information you will then suggest the TOP3 detector / descriptor combinations as the best choice for our purpose of detecting keypoints on vehicles. Finally, in a short text, please justify your recommendation based on your observations and on the data you collected.
-=======
-## Task MP.5 add FLANN matching 
-in file matching2D.cpp from open cv docs
-```c_cpp
-matcher = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
-```
-## TASK MP.6 add KNN match selection 
-and perform descriptor distance ratio filtering with t=0.8 in file matching2D.cpp
 
->>>>>>> Stashed changes
 
 ## Dependencies for Running Locally
 * cmake >= 2.8
