@@ -28,7 +28,7 @@ int main(int argc, const char *argv[])
 #ifdef createTableDetectors
     string detectorsTable="| Detectors | 01   | 02   | 03   | 04   | 05   | 06   | 07   | 08   | 09   | 10   |Total |\r\n| :-------: | :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: |\r\n";
     string detDescTable="| Det/Desc | 01-02   | 02-03   | 03-04   | 04-05   | 05-06   | 06-07   | 07-08   | 08-09   | 09-10| \r\n| :-------: | :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: |\r\n";
-    string detDescTableTime="| Det/Desc |Total Matching|Total Time |Ratio |\r\n| :-------: | :--: | :--: | :--: |\r\n";
+    string detDescTableTime="| Det/Desc |Total Matching/Total Time |Ratio |\r\n| :-------: | :--: | :--: |\r\n";
     
     int detectorsTotal=0;
     int detDescTotal=0;
@@ -236,11 +236,13 @@ for (int dt=0;dt<7;dt++)
             
             #ifdef createTableDetectors
             t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
-            detDescTable+=to_string(matches.size()); 
+            detDescTable+=to_string(matches.size())+"|"; 
+            /*
             detDescTable+="/"; 
             detDescTable+=to_string(1000 * t / 1.0); 
             
             detDescTable+=" ms|";
+            */
             detDescTotal+=matches.size();
             detDescTimeTotal+=t;
             #endif
@@ -281,8 +283,8 @@ for (int dt=0;dt<7;dt++)
     detectorsResults.open("resultadosDetectores.txt");
     detectorsResults << detectorsTable;
     detectorsResults.close();
-    detDescTable+=to_string(detDescTotal)+" / "+to_string(1000*detDescTimeTotal)+" ms|";
-    detDescTable+=to_string(detDescTotal/(1000*detDescTimeTotal))+" matches/ms|"; 
+    detDescTable+=to_string(detDescTotal);//+" / "+to_string(1000*detDescTimeTotal)+" ms|";
+    detDescTableTime+=to_string(detDescTotal/(1000*detDescTimeTotal))+" matches/ms|"; 
     detDescTable+="\n\r";
     ofstream descriptorResults;
     descriptorResults.open("resultadosDescriptores.txt");
