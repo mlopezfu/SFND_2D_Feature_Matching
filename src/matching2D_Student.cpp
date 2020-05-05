@@ -18,6 +18,11 @@ void matchDescriptors(std::vector<cv::KeyPoint> &kPtsSource, std::vector<cv::Key
     }
     else if (matcherType.compare("MAT_FLANN") == 0)
     {
+        if (descSource.type() != CV_32F) {
+            // Convert binary descriptors to floating point due to a bug in current OpenCV implementation
+            descSource.convertTo(descSource, CV_32F);
+            descRef.convertTo(descRef, CV_32F);
+        }
         matcher = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
     }
 
@@ -41,6 +46,7 @@ void matchDescriptors(std::vector<cv::KeyPoint> &kPtsSource, std::vector<cv::Key
             }
         }
     }
+  cout << "Number of matched keypoints = " << matches.size() << endl;
 }
 
 // Use one of several types of state-of-art descriptors to uniquely identify keypoints
@@ -205,45 +211,41 @@ void detKeypointsHarris(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool
 // Detect keypoints in an image using more recent methods available in OpenCV
 void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, std::string detectorType, bool bVis)
 {
-    if (detectorType.compare("FAST") == 0) {
-        // int threshold_FAST = 150;
-        auto fast = cv::FastFeatureDetector::create();
-        fast->detect(img, keypoints);
+    cv::Ptr<cv::FeatureDetector> detector;
+    if ("FAST" == detectorType) {
+        int threshold = 30;                                                              // difference between intensity of the central pixel and pixels of a circle around this pixel
+        bool bNMS = true;                                                                // perform non-maxima suppression on keypoints
+        cv::FastFeatureDetector::DetectorType type = cv::FastFeatureDetector::TYPE_9_16; // TYPE_9_16, TYPE_7_12, TYPE_5_8
+        detector = cv::FastFeatureDetector::create(threshold, bNMS, type);
     }
-    else if (detectorType.compare("BRISK") == 0) {
-        // int threshold_BRISK = 200;
-        auto brisk = cv::BRISK::create();
-        brisk->detect(img, keypoints);
+    else if ("BRISK" == detectorType) {
+        detector = cv::BRISK::create();
     }
-    else if (detectorType.compare("ORB") == 0) {
-        auto orb = cv::ORB::create();
-        orb->detect(img, keypoints);
+    else if ("ORB" == detectorType) {
+        detector = cv::ORB::create();
     }
-    else if (detectorType.compare("AKAZE") == 0) {
-        auto akaze = cv::AKAZE::create();
-        akaze->detect(img, keypoints);
+    else if ("AKAZE" == detectorType) {
+        detector = cv::AKAZE::create();
     }
-    else if (detectorType.compare("FREAK") == 0) {
-        auto freak = cv::xfeatures2d::FREAK::create();
-        freak->compute(img, keypoints,img);
-    }
-    else if (detectorType.compare("SIFT") == 0) {
-        auto sift = cv::xfeatures2d::SIFT::create();
-        sift->detect(img, keypoints);
+    else if ("SIFT" == detectorType){
+        detector = cv::xfeatures2d::SIFT::create();
     }
     else {
-        // Specified detectorType is unsupported
-        throw invalid_argument(detectorType + " is not a valid detectorType");
+        std::cerr << "Invalid detector type!!!" << std::endl;
     }
+
+    auto t = (double)cv::getTickCount();
+    detector->detect(img, keypoints);
+    t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
+    cout << detectorType << " detection with n = " << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms" << endl;
 
     if (bVis)
     {
-        // Visualize the keypoints
-        string windowName = detectorType + " keypoint detection results";
-        cv::namedWindow(windowName);
         cv::Mat visImage = img.clone();
         cv::drawKeypoints(img, keypoints, visImage, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
-        cv::imshow(windowName, visImage);
+        string windowName = detectorType;
+        cv::namedWindow(windowName, 6);
+        imshow(windowName, visImage);
         cv::waitKey(0);
     }
 }
