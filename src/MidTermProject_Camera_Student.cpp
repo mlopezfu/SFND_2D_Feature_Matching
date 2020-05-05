@@ -27,7 +27,8 @@ int main(int argc, const char *argv[])
     string descriptorTypes[]={"BRISK", "BRIEF", "FREAK",   "SIFT","ORB","AKAZE"};
 #ifdef createTableDetectors
     string detectorsTable="| Detectors | 01   | 02   | 03   | 04   | 05   | 06   | 07   | 08   | 09   | 10   |Total |\r\n| :-------: | :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: |\r\n";
-    string detDescTable="| Det/Desc | 01-02   | 02-03   | 03-04   | 04-05   | 05-06   | 06-07   | 07-08   | 08-09   | 09-10   |Total |Ratio |\r\n| :-------: | :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: |\r\n";
+    string detDescTable="| Det/Desc | 01-02   | 02-03   | 03-04   | 04-05   | 05-06   | 06-07   | 07-08   | 08-09   | 09-10| \r\n| :-------: | :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: |\r\n";
+    string detDescTableTime="| Det/Desc |Total Matching|Total Time |Ratio |\r\n| :-------: | :--: | :--: | :--: |\r\n";
     
     int detectorsTotal=0;
     int detDescTotal=0;
@@ -57,17 +58,15 @@ for (int dt=0;dt<7;dt++)
     cout << "Detector: "<< detectorTypes[dt] << " Descriptor: "<< descriptorTypes[desct] << endl;
     if(detDescTotal!=0)
     {   
-        detDescTable+=to_string(detDescTotal)+" / "+to_string(1000*detDescTimeTotal)+" ms|";
-        detDescTable+=to_string(detDescTotal/(1000*detDescTimeTotal))+" matches/ms|"; 
+        detDescTableTime+=to_string(detDescTotal)+" / "+to_string(1000*detDescTimeTotal)+" ms|";
+        detDescTableTime+=to_string(detDescTotal/(1000*detDescTimeTotal))+" matches/ms|\n\r"; 
         detDescTable+="\n\r";
         detDescTotal=0;
         detDescTimeTotal=0;
     }
-    detDescTable+="|";
-    detDescTable+=detectorTypes[dt]; 
-    detDescTable+="/"; 
-    detDescTable+=descriptorTypes[desct]; 
-    detDescTable+="|";
+    detDescTable+="|"+detectorTypes[dt]+"/"+descriptorTypes[desct]+"|"; 
+    detDescTableTime+="|"+detectorTypes[dt]+"/"+descriptorTypes[desct]+"|";
+   
 #endif
     /* INIT VARIABLES AND DATA STRUCTURES */
 
@@ -287,7 +286,7 @@ for (int dt=0;dt<7;dt++)
     detDescTable+="\n\r";
     ofstream descriptorResults;
     descriptorResults.open("resultadosDescriptores.txt");
-    descriptorResults << detDescTable;
+    descriptorResults << detDescTable << "\n\r" << detDescTableTime;
     descriptorResults.close();
     
 #endif
