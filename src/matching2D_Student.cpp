@@ -2,7 +2,7 @@
 #include "matching2D.hpp"
 
 using namespace std;
-
+/*
 // Find best matches for keypoints in two camera images based on several matching methods
 void matchDescriptors(std::vector<cv::KeyPoint> &kPtsSource, std::vector<cv::KeyPoint> &kPtsRef, cv::Mat &descSource, cv::Mat &descRef,
                       std::vector<cv::DMatch> &matches, std::string descriptorType, std::string matcherType, std::string selectorType)
@@ -29,8 +29,9 @@ void matchDescriptors(std::vector<cv::KeyPoint> &kPtsSource, std::vector<cv::Key
     // perform matching task
     if (selectorType.compare("SEL_NN") == 0)
     { // nearest neighbor (best match)
-
+cout << "NN" << endl;
         matcher->match(descSource, descRef, matches); // Finds the best match for each descriptor in desc1
+        cout << "NN" << endl;
     }
     else if (selectorType.compare("SEL_KNN") == 0)
     { // k nearest neighbors (k=2)
@@ -47,8 +48,89 @@ void matchDescriptors(std::vector<cv::KeyPoint> &kPtsSource, std::vector<cv::Key
         }
     }
   cout << "Number of matched keypoints = " << matches.size() << endl;
-}
+}*/
+void matchDescriptors(std::vector<cv::KeyPoint> &kPtsSource, std::vector<cv::KeyPoint> &kPtsRef, cv::Mat &descSource, cv::Mat &descRef,
+                      std::vector<cv::DMatch> &matches, std::string descriptorCategory, std::string matcherType, std::string selectorType)
+{
+    bool crossCheck = false;
+    cv::Ptr<cv::DescriptorMatcher> matcher;
 
+    // Brute force
+    if (matcherType.compare("MAT_BF") == 0)
+    {
+        int normType;
+
+        // with SIFT
+        if (descriptorCategory.compare("DES_HOG") == 0)
+        {
+            normType = cv::NORM_L2;
+        }
+
+        // with all other binary descriptors
+        else if (descriptorCategory.compare("DES_BINARY") == 0)
+        {
+            normType = cv::NORM_HAMMING;
+        }
+        
+        else {
+            throw invalid_argument(descriptorCategory + " is not a valid descriptorCategory");
+        }
+
+        matcher = cv::BFMatcher::create(normType, crossCheck);
+    }
+
+    // FLANN matching
+    else if (matcherType.compare("MAT_FLANN") == 0)
+    {
+        // with SIFT
+        if (descriptorCategory.compare("DES_HOG") == 0)
+        {
+            matcher = cv::FlannBasedMatcher::create();
+        }
+
+        // with all other binary descriptorTypes
+        else if (descriptorCategory.compare("DES_BINARY") == 0)
+        {
+            const cv::Ptr<cv::flann::IndexParams>& indexParams = cv::makePtr<cv::flann::LshIndexParams>(12, 20, 2);
+            matcher = cv::makePtr<cv::FlannBasedMatcher>(indexParams);
+        }
+
+        else {
+            throw invalid_argument(descriptorCategory + " is not a valid descriptorCategory");
+        }
+    }
+
+    else {
+        throw invalid_argument(matcherType + " is not a valid matcherType");
+    }
+
+    // Perform nearest neighbor matching (best match)
+    if (selectorType.compare("SEL_NN") == 0)
+    {
+        matcher->match(descSource, descRef, matches);
+    }
+    
+    // Perform k nearest neighbors (k=2)
+    else if (selectorType.compare("SEL_KNN") == 0)
+    {
+        int k = 2;
+        vector<vector<cv::DMatch>> knn_matches;
+        matcher->knnMatch(descSource, descRef, knn_matches, k);
+        
+        // Filter matches using descriptor distance ratio test
+        double minDescDistRatio = 0.8;
+        for (auto it : knn_matches) {
+            // The returned knn_matches vector contains some nested vectors with size < 2 !?
+            if ( 2 == it.size() && (it[0].distance < minDescDistRatio * it[1].distance) ) {
+                matches.push_back(it[0]);
+            }
+        }
+    }
+
+    else {
+        throw invalid_argument(selectorType + " is not a valid selectorType");
+    }
+}
 // Use one of several types of state-of-art descriptors to uniquely identify keypoints
 void descKeypoints(vector<cv::KeyPoint> &keypoints, cv::Mat &img, cv::Mat &descriptors, string descriptorType)
 {

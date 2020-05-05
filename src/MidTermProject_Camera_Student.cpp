@@ -17,11 +17,58 @@
 #include "matching2D.hpp"
 
 using namespace std;
+#define createTableDetectors 
+
 
 /* MAIN PROGRAM */
 int main(int argc, const char *argv[])
 {
+    string detectorTypes[]={"HARRIS", "SHITOMASI", "FAST", "BRISK", "ORB", "AKAZE",  "SIFT"};
+    string descriptorTypes[]={"BRISK", "BRIEF", "FREAK",   "SIFT","ORB","AKAZE"};
+#ifdef createTableDetectors
+    string detectorsTable="| Detectors | 01   | 02   | 03   | 04   | 05   | 06   | 07   | 08   | 09   | 10   |Total |\r\n| :-------: | :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: |\r\n";
+    string detDescTable="| Det/Desc | 01-02   | 02-03   | 03-04   | 04-05   | 05-06   | 06-07   | 07-08   | 08-09   | 09-10   |Total |Ratio |\r\n| :-------: | :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: |\r\n";
+    
+    int detectorsTotal=0;
+    int detDescTotal=0;
+    double detDescTimeTotal=0;
+for (int dt=0;dt<7;dt++)
+{// To iterate throug detector types
+    cout << endl << endl << endl << endl;
+    cout << "Detector: "<< detectorTypes[dt] << endl;
+    if(detectorsTotal!=0)
+    {   
+        detectorsTable+=to_string(detectorsTotal); 
+        detectorsTable+="|\n\r";
+        detectorsTotal=0;
+    }
+    detectorsTable+="|";
+    detectorsTable+=detectorTypes[dt]; 
+    detectorsTable+="|";
+    int ndescriptors=5;
+    if(dt==5)
+        ndescriptors=6;
+    if(dt==6)
+        ndescriptors=4;
 
+    for(int desct=0;desct<ndescriptors;desct++)
+    {
+    cout << endl << endl << endl << endl;
+    cout << "Detector: "<< detectorTypes[dt] << " Descriptor: "<< descriptorTypes[desct] << endl;
+    if(detDescTotal!=0)
+    {   
+        detDescTable+=to_string(detDescTotal)+" / "+to_string(1000*detDescTimeTotal)+" ms|";
+        detDescTable+=to_string(detDescTotal/(1000*detDescTimeTotal))+" matches/ms|"; 
+        detDescTable+="\n\r";
+        detDescTotal=0;
+        detDescTimeTotal=0;
+    }
+    detDescTable+="|";
+    detDescTable+=detectorTypes[dt]; 
+    detDescTable+="/"; 
+    detDescTable+=descriptorTypes[desct]; 
+    detDescTable+="|";
+#endif
     /* INIT VARIABLES AND DATA STRUCTURES */
 
     // data location
@@ -38,7 +85,7 @@ int main(int argc, const char *argv[])
     // misc
     int dataBufferSize = 2;       // no. of images which are held in memory (ring buffer) at the same time
     vector<DataFrame> dataBuffer; // list of data frames which are held in memory at the same time
-    bool bVis = true;//false;            // visualize results
+    bool bVis = false;//false;            // visualize results
 
     /* MAIN LOOP OVER ALL IMAGES */
 
@@ -79,8 +126,13 @@ int main(int argc, const char *argv[])
         //// STUDENT ASSIGNMENT
         //// TASK MP.2 -> add the following keypoint detectors in file matching2D.cpp and enable string-based selection based on detectorType
         //// -> HARRIS, SHITOMASI, FAST, BRISK, ORB, AKAZE, FREAK, SIFT
-        string detectorTypes[]={"HARRIS", "SHITOMASI", "FAST", "BRISK", "ORB", "AKAZE", "FREAK", "SIFT"};
-        string detectorType = detectorTypes[1];
+        //string detectorTypes[]={"HARRIS", "SHITOMASI", "FAST", "BRISK", "ORB", "AKAZE", "FREAK", "SIFT"};
+        #ifdef createTableDetectors
+        string detectorType = detectorTypes[dt];
+        double t = (double)cv::getTickCount();
+        #else
+        string detectorType = detectorTypes[0];
+        #endif
         if (detectorType.compare("SHITOMASI") == 0)
         {
             detKeypointsShiTomasi(keypoints, imgGray, bVis);
@@ -93,7 +145,11 @@ int main(int argc, const char *argv[])
         {
             detKeypointsModern(keypoints, imgGray,detectorType, bVis);
         }
-        
+        #ifdef createTableDetectors
+        detectorsTable+=to_string(keypoints.size()); 
+        detectorsTable+="|";
+        detectorsTotal+=keypoints.size();
+        #endif
         //// EOF STUDENT ASSIGNMENT
 
         //// STUDENT ASSIGNMENT
@@ -139,10 +195,18 @@ int main(int argc, const char *argv[])
         //// -> BRISK, BRIEF, ORB, FREAK, AKAZE, SIFT
 
         cv::Mat descriptors;
-        string descriptorTypes[]={"BRISK", "BRIEF", "ORB", "FREAK", "AKAZE", "SIFT"};
+        //string descriptorTypes[]={"BRISK", "BRIEF", "ORB", "FREAK", "AKAZE", "SIFT"};
+        #ifdef createTableDetectors
+        string descriptorType = descriptorTypes[desct];
+        #else
         string descriptorType = descriptorTypes[0];
+        #endif
+        //string descriptorType = descriptorTypes[0];
         //string descriptorType = "BRISK"; // BRISK, BRIEF, ORB, FREAK, AKAZE, SIFT
+        
         descKeypoints((dataBuffer.end() - 1)->keypoints, (dataBuffer.end() - 1)->cameraImg, descriptors, descriptorType);
+        
+
         //// EOF STUDENT ASSIGNMENT
 
         // push descriptors for current frame to end of data buffer
@@ -150,24 +214,37 @@ int main(int argc, const char *argv[])
 
         cout << "#3 : EXTRACT DESCRIPTORS done" << endl;
 
-        if (dataBuffer.size() > 1) // wait until at least two images have been processed
+        if (dataBuffer.size() > 1 && !(detectorType=="SIFT" && descriptorType=="ORB")) // wait until at least two images have been processed
         {
 
             /* MATCH KEYPOINT DESCRIPTORS */
 
             vector<cv::DMatch> matches;
             string matcherType = "MAT_BF";        // MAT_BF, MAT_FLANN
-            string descriptorType = "DES_BINARY"; // DES_BINARY, DES_HOG
+            string descriptorCategory = "DES_BINARY"; // DES_BINARY, DES_HOG
             string selectorType = "SEL_KNN";       // SEL_NN, SEL_KNN
-
+            if (descriptorType.compare("SIFT") == 0)
+            {
+                descriptorCategory="DES_HOG";
+            }
             //// STUDENT ASSIGNMENT
             //// TASK MP.5 -> add FLANN matching in file matching2D.cpp
             //// TASK MP.6 -> add KNN match selection and perform descriptor distance ratio filtering with t=0.8 in file matching2D.cpp
-
+            
             matchDescriptors((dataBuffer.end() - 2)->keypoints, (dataBuffer.end() - 1)->keypoints,
                              (dataBuffer.end() - 2)->descriptors, (dataBuffer.end() - 1)->descriptors,
-                             matches, descriptorType, matcherType, selectorType);
-
+                             matches, descriptorCategory, matcherType, selectorType);
+            
+            #ifdef createTableDetectors
+            t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
+            detDescTable+=to_string(matches.size()); 
+            detDescTable+="/"; 
+            detDescTable+=to_string(1000 * t / 1.0); 
+            
+            detDescTable+=" ms|";
+            detDescTotal+=matches.size();
+            detDescTimeTotal+=t;
+            #endif
             //// EOF STUDENT ASSIGNMENT
 
             // store matches in current data frame
@@ -176,7 +253,7 @@ int main(int argc, const char *argv[])
             cout << "#4 : MATCH KEYPOINT DESCRIPTORS done" << endl;
 
             // visualize matches between current and previous image
-            bVis = true;
+            
             if (bVis)
             {
                 cv::Mat matchImg = ((dataBuffer.end() - 1)->cameraImg).clone();
@@ -192,10 +269,27 @@ int main(int argc, const char *argv[])
                 cout << "Press key to continue to next image" << endl;
                 cv::waitKey(0); // wait for key to be pressed
             }
-            bVis = false;
+            
         }
 
     } // eof loop over all images
-
+#ifdef createTableDetectors   
+    }
+}
+    detectorsTable+=to_string(detectorsTotal); 
+    detectorsTable+="|\n\r";    
+    ofstream detectorsResults;
+    detectorsResults.open("resultadosDetectores.txt");
+    detectorsResults << detectorsTable;
+    detectorsResults.close();
+    detDescTable+=to_string(detDescTotal)+" / "+to_string(1000*detDescTimeTotal)+" ms|";
+    detDescTable+=to_string(detDescTotal/(1000*detDescTimeTotal))+" matches/ms|"; 
+    detDescTable+="\n\r";
+    ofstream descriptorResults;
+    descriptorResults.open("resultadosDescriptores.txt");
+    descriptorResults << detDescTable;
+    descriptorResults.close();
+    
+#endif
     return 0;
 }
