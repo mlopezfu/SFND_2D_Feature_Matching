@@ -48,8 +48,8 @@ Since the name cant be mistyped there are only 3 options Shitomasi, Harris or mo
   }
 ```
 I have had problems with FREAK, because it needs a third parameters that I unknow. I have use a matrix so the code runs, but I think its not the best way.
-Based on the input string, we implemented 3 different functions: detKeypointsShiTomasi (Shi-Thomasi, Good Features to Track), detKeypointsHarris(Harris corner), detKeypointsModern(FAST, BRISK, ORB, AKAZE, and SIFT). In each function, we set up several parameters(block size, minimal distance, threshold...). Then OpenCV build-in detector class will be initialized with these parameters and scan the whole image to detect key-points. Also the detection time will be logged for performance evaluation.
-
+Calls implemented in lines 82 to 95 of MidTermProject_Camera_Student.cpp
+Methods implemented in lines 135 to 249 of matching2D_Student.cpp
 ## Task MP.3 Box Filtering 
 
 only keep keypoints on the preceding vehicle
