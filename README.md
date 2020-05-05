@@ -24,7 +24,7 @@ dataBuffer.push_back(frame);
 ```
 Implemented in lines 65 to 69 of MidTermProjectCamera_Student.cpp
 
-## Task MP.2 Keypoint Detectors
+## Task MP.2 Keypoint Detectors
 
 add the following keypoint detectors in file matching2D.cpp and enable string-based selection based on detectorType
  HARRIS, SHITOMASI, FAST, BRISK, ORB, AKAZE, FREAK, SIFT
@@ -51,6 +51,7 @@ I have had problems with FREAK, because it needs a third parameters that I unkno
 Based on the input string, we implemented 3 different functions: detKeypointsShiTomasi (Shi-Thomasi, Good Features to Track), detKeypointsHarris(Harris corner), detKeypointsModern(FAST, BRISK, ORB, AKAZE, and SIFT). In each function, we set up several parameters(block size, minimal distance, threshold...). Then OpenCV build-in detector class will be initialized with these parameters and scan the whole image to detect key-points. Also the detection time will be logged for performance evaluation.
 
 ## Task MP.3 Box Filtering 
+
 only keep keypoints on the preceding vehicle
 A rectangle is defined, so points that are inside of the rectanle are inserted.
 ```c_cpp
@@ -64,7 +65,7 @@ keypoints = keypointsInside;
 
 Implemented in lines 108 to 112 of MidTermProjectCamera_Student.cpp
 
-## Task MP.4 Descriptors
+## Task MP.4 Descriptors
 
 Add the following descriptors in file matching2D.cpp and enable string-based selection based on descriptorType
    BRISK, BRIEF, ORB, FREAK, AKAZE, SIFT
@@ -92,10 +93,10 @@ Nearest neighbor or best match is already implemented, so K nearest neighbors (d
 For KNN matching, we filter matches using descriptor distance ratio test to remove some outliers. 
 Implemented in matching_2d_Student.cpp lines 36 to 42.
 
-## Task MP.7
+## Task MP.7
 Your seventh task is to count the number of keypoints on the preceding vehicle for all 10 images and take note of the distribution of their neighborhood size. Do this for all the detectors you have implemented.
 
-| Detectors | Number of Key-points |
+| Detectors | Number of Key-points &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|
 | :-------: | :------------------: |
 | SHITOMASI |        13423         |
 |  HARRIS   |         1737         |
@@ -104,7 +105,8 @@ Your seventh task is to count the number of keypoints on the preceding vehicle f
 |    ORB    |         5000         |
 |   AKAZE   |        13429         |
 |   SIFT    |        13862         |
-## Task MP.8
+
+## Task MP.8
 Your eighth task is to count the number of matched keypoints for all 10 images using all possible combinations of detectors and descriptors. In the matching step, use the BF approach with the descriptor distance ratio set to 0.8.
 | Detectors\Descriptors | BRISK |  BRIEF  |      ORB      | FREAK | AKAZE | SIFT |
 | :-------------------: | :---: | :-----: | :-----------: | :---: | :---: | :--: |
@@ -121,7 +123,7 @@ Your eighth task is to count the number of matched keypoints for all 10 images u
 * HARRIS with blockSize = 2
 * In the matching step, the BF approach is used with the descriptor distance ratio set to 0.8.
 
-## Task MP.9
+## Task MP.9
 Your ninth task is to log the time it takes for keypoint detection and descriptor extraction. The results must be entered into a spreadsheet and based on this information you will then suggest the TOP3 detector / descriptor combinations as the best choice for our purpose of detecting keypoints on vehicles. Finally, in a short text, please justify your recommendation based on your observations and on the data you collected.
 #### Efficiency (matches/ms)
 
@@ -145,7 +147,7 @@ Your ninth task is to log the time it takes for keypoint detection and descripto
 |         AKAZE         | 387.531 |   383.136   |    378.456    | 584.215 | 753.823 |  458.371   |
 |         SIFT          | 607.335 |   623.61    | Out of Memory | 805.025 |   N/A   |  1072.55   |
 
-## TOP3 detector / descriptor combinations
+#### TOP3 detector / descriptor combinations
 
 1. FAST + BRIEF
 2. FAST + ORB
