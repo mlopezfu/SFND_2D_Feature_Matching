@@ -122,7 +122,7 @@ Then, if you disable bVis, you can generate all the combinations and generate th
 Your eighth task is to count the number of matched keypoints for all 10 images using all possible combinations of detectors and descriptors. In the matching step, use the BF approach with the descriptor distance ratio set to 0.8.
 
 | Det/Desc | 01-02   | 02-03   | 03-04   | 04-05   | 05-06   | 06-07   | 07-08   | 08-09   | 09-10| 
-| :-------: | :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: |
+| :-------: | :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: |
 |HARRIS/BRISK|12|10|14|15|16|16|15|23|21|
 |HARRIS/BRIEF|14|11|15|20|24|26|16|24|23|
 |HARRIS/FREAK|13|13|15|15|17|20|12|21|18|
@@ -158,6 +158,7 @@ Your eighth task is to count the number of matched keypoints for all 10 images u
 |SIFT/BRIEF|86|78|76|85|69|74|76|70|88|
 |SIFT/FREAK|65|72|64|66|59|59|64|65|79|
 |SIFT/SIFT|82|81|85|93|90|81|82|102|104|
+
 
 * KAZE/AKAZE descriptors will only work with KAZE/AKAZE keypoints.
 * SIFT/ORB Segmentation Fault
