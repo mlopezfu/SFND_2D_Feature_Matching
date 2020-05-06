@@ -22,7 +22,7 @@ if (dataBuffer.size() >=dataBufferSize) // wait until at least two images have b
 }
 dataBuffer.push_back(frame);
 ```
-Implemented in lines 65 to 69 of MidTermProjectCamera_Student.cpp
+Implemented in lines 111 to 114 of MidTermProjectCamera_Student.cpp
 
 ## Task MP.2 Keypoint Detectors
 
@@ -47,9 +47,8 @@ Since the name cant be mistyped there are only 3 options Shitomasi, Harris or mo
       detKeypointsModern(keypoints, imgGray,detectorType, bVis);
   }
 ```
-I have had problems with FREAK, because it needs a third parameters that I unknow. I have use a matrix so the code runs, but I think its not the best way.
-Calls implemented in lines 82 to 95 of MidTermProject_Camera_Student.cpp
-Methods implemented in lines 135 to 249 of matching2D_Student.cpp
+Calls implemented in lines 135 to 146 of MidTermProject_Camera_Student.cpp
+Methods implemented in lines 174 to 284 of matching2D_Student.cpp
 ## Task MP.3 Box Filtering 
 
 only keep keypoints on the preceding vehicle
@@ -63,7 +62,7 @@ keypoints = keypointsInside;
 ```
 <img src="imgDoc/inCube.png" width="820"  />
 
-Implemented in lines 108 to 112 of MidTermProjectCamera_Student.cpp
+Implemented in lines 163 to 167 of MidTermProjectCamera_Student.cpp
 
 ## Task MP.4 Descriptors
 
@@ -79,22 +78,34 @@ The methods are implemented in matching2D_Student.cpp.
 We still use OpenCV build-in descriptors (BRIEF, ORB, FREAK, AKAZE and SIFT) class with default parameters to uniquely identify keypoints. Similar to step 2, we log the descriptor extraction time for performance evaluation.
 
 After all the implementations, I have had some problems with the AKAZE descriptor, since I have seen that it seems that only can be used with the AKAZE key point detector.
+Calls implemented in lines 198 to 206 of MidTermProject_Camera_Student.cpp
+This has been changed to generate the data table. You can select descriptor in line 201 when in line 20 createTableDetectors is not defined #define createTableDetectors if its defined, it will be automatically selected. 
+Methods implemented in lines 86 to 130 of matching2D_Student.cpp
 
 ## Task MP.5 add FLANN matching 
-in file matching2D.cpp from open cv docs
+At the beginning was only one line in file matching2D.cpp from open cv docs
 ```c_cpp
 matcher = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
 ```
-User can choose which matching method to use: Brute-force matcher(MAT_BF) or FLANN matcher(MAT_FLANN). Note that we need to convert our image to CV_32F type due to  a bug in current OpenCV implementation if we choose FLANN matching.
+User can choose which matching method to use: Brute-force matcher(MAT_BF) or FLANN matcher(MAT_FLANN). 
+
+But after trying with every combination there were problems with SIFT so we have to convert our image to CV_32F.
+Implemented in lines 39 to 51 of matching2D_Student.cpp.
 
 ## TASK MP.6 add KNN match selection 
 and perform descriptor distance ratio filtering with t=0.8 in file matching2D.cpp
 Nearest neighbor or best match is already implemented, so K nearest neighbors (default k=2) are implemented. 
 For KNN matching, we filter matches using descriptor distance ratio test to remove some outliers. 
-Implemented in matching_2d_Student.cpp lines 36 to 42.
+Implemented in matching_2d_Student.cpp lines 67 to 77.
 
 ## Task MP.7
 Your seventh task is to count the number of keypoints on the preceding vehicle for all 10 images and take note of the distribution of their neighborhood size. Do this for all the detectors you have implemented.
+
+At the beginning it was a manual task, but as soon as I change something I had to begin again I tried to make it automatic.
+You can define in line 20 of MidTermProject_Camera_Student.cpp 
+#define createTableDetectors 
+
+Then, if you disable bVis, you can generate all the combinations and generate thw following tables in the build folder.
 
 | Detectors | 01   | 02   | 03   | 04   | 05   | 06   | 07   | 08   | 09   | 10   |Total |
 | :-------: | :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: |
@@ -199,6 +210,8 @@ Your ninth task is to log the time it takes for keypoint detection and descripto
 2. FAST + ORB
 3. SHITOMASI + BRIEF
   
+Four our purpouses of calculate the time to collision I think the fastest are the best combination. For another kind of application where tolerance must be better and we dont have time constraints maybe another combination will work better.
+
 * cmake >= 2.8
   * All OSes: [click here for installation instructions](https://cmake.org/install/)
 * make >= 4.1 (Linux, Mac), 3.81 (Windows)

@@ -2,53 +2,8 @@
 #include "matching2D.hpp"
 
 using namespace std;
-/*
+
 // Find best matches for keypoints in two camera images based on several matching methods
-void matchDescriptors(std::vector<cv::KeyPoint> &kPtsSource, std::vector<cv::KeyPoint> &kPtsRef, cv::Mat &descSource, cv::Mat &descRef,
-                      std::vector<cv::DMatch> &matches, std::string descriptorType, std::string matcherType, std::string selectorType)
-{
-    // configure matcher
-    bool crossCheck = false;
-    cv::Ptr<cv::DescriptorMatcher> matcher;
-
-    if (matcherType.compare("MAT_BF") == 0)
-    {
-        int normType = cv::NORM_HAMMING;
-        matcher = cv::BFMatcher::create(normType, crossCheck);
-    }
-    else if (matcherType.compare("MAT_FLANN") == 0)
-    {
-        if (descSource.type() != CV_32F) {
-            // Convert binary descriptors to floating point due to a bug in current OpenCV implementation
-            descSource.convertTo(descSource, CV_32F);
-            descRef.convertTo(descRef, CV_32F);
-        }
-        matcher = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
-    }
-
-    // perform matching task
-    if (selectorType.compare("SEL_NN") == 0)
-    { // nearest neighbor (best match)
-cout << "NN" << endl;
-        matcher->match(descSource, descRef, matches); // Finds the best match for each descriptor in desc1
-        cout << "NN" << endl;
-    }
-    else if (selectorType.compare("SEL_KNN") == 0)
-    { // k nearest neighbors (k=2)
-
-        vector<vector<cv::DMatch>> knn_matches;
-        matcher->knnMatch(descSource, descRef, knn_matches, 2);
-        double minDescDistRatio = 0.8;
-        for (auto it = knn_matches.begin(); it != knn_matches.end(); ++it)
-        {
-            if ((*it)[0].distance < minDescDistRatio * (*it)[1].distance)
-            {
-                matches.push_back((*it)[0]);
-            }
-        }
-    }
-  cout << "Number of matched keypoints = " << matches.size() << endl;
-}*/
 void matchDescriptors(std::vector<cv::KeyPoint> &kPtsSource, std::vector<cv::KeyPoint> &kPtsRef, cv::Mat &descSource, cv::Mat &descRef,
                       std::vector<cv::DMatch> &matches, std::string descriptorCategory, std::string matcherType, std::string selectorType)
 {
@@ -65,14 +20,12 @@ void matchDescriptors(std::vector<cv::KeyPoint> &kPtsSource, std::vector<cv::Key
         {
             normType = cv::NORM_L2;
         }
-
-        // with all other binary descriptors
         else if (descriptorCategory.compare("DES_BINARY") == 0)
         {
             normType = cv::NORM_HAMMING;
         }
-        
-        else {
+        else 
+        {
             throw invalid_argument(descriptorCategory + " is not a valid descriptorCategory");
         }
 
@@ -87,15 +40,13 @@ void matchDescriptors(std::vector<cv::KeyPoint> &kPtsSource, std::vector<cv::Key
         {
             matcher = cv::FlannBasedMatcher::create();
         }
-
-        // with all other binary descriptorTypes
         else if (descriptorCategory.compare("DES_BINARY") == 0)
         {
             const cv::Ptr<cv::flann::IndexParams>& indexParams = cv::makePtr<cv::flann::LshIndexParams>(12, 20, 2);
             matcher = cv::makePtr<cv::FlannBasedMatcher>(indexParams);
         }
-
-        else {
+        else 
+        {
             throw invalid_argument(descriptorCategory + " is not a valid descriptorCategory");
         }
     }
@@ -120,8 +71,7 @@ void matchDescriptors(std::vector<cv::KeyPoint> &kPtsSource, std::vector<cv::Key
         // Filter matches using descriptor distance ratio test
         double minDescDistRatio = 0.8;
         for (auto it : knn_matches) {
-            // The returned knn_matches vector contains some nested vectors with size < 2 !?
-            if ( 2 == it.size() && (it[0].distance < minDescDistRatio * it[1].distance) ) {
+            if (it[0].distance < minDescDistRatio * it[1].distance)  {
                 matches.push_back(it[0]);
             }
         }

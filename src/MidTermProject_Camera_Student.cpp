@@ -283,7 +283,7 @@ for (int dt=0;dt<7;dt++)
     detectorsResults.open("resultadosDetectores.txt");
     detectorsResults << detectorsTable;
     detectorsResults.close();
-    detDescTable+=to_string(detDescTotal);//+" / "+to_string(1000*detDescTimeTotal)+" ms|";
+    //detDescTable+=to_string(detDescTotal);//+" / "+to_string(1000*detDescTimeTotal)+" ms|";
     detDescTableTime+=to_string(detDescTotal/(1000*detDescTimeTotal))+" matches/ms|"; 
     detDescTable+="\n\r";
     ofstream descriptorResults;
