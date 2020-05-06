@@ -17,12 +17,12 @@
 #include "matching2D.hpp"
 
 using namespace std;
-#define createTableDetectors 
+//#define createTableDetectors 
 
 
 /* MAIN PROGRAM */
 int main(int argc, const char *argv[])
-{
+{   // Changed here to be used in the iteration.
     string detectorTypes[]={"HARRIS", "SHITOMASI", "FAST", "BRISK", "ORB", "AKAZE",  "SIFT"};
     string descriptorTypes[]={"BRISK", "BRIEF", "FREAK",   "SIFT","ORB","AKAZE"};
 #ifdef createTableDetectors
@@ -84,7 +84,7 @@ for (int dt=0;dt<7;dt++)
     // misc
     int dataBufferSize = 2;       // no. of images which are held in memory (ring buffer) at the same time
     vector<DataFrame> dataBuffer; // list of data frames which are held in memory at the same time
-    bool bVis = false;//false;            // visualize results
+    bool bVis = true;//false;            // visualize results
 
     /* MAIN LOOP OVER ALL IMAGES */
 
@@ -130,7 +130,7 @@ for (int dt=0;dt<7;dt++)
         string detectorType = detectorTypes[dt];
         double t = (double)cv::getTickCount();
         #else
-        string detectorType = detectorTypes[0];
+        string detectorType = detectorTypes[0];// 0 Harris
         #endif
         if (detectorType.compare("SHITOMASI") == 0)
         {
@@ -198,7 +198,7 @@ for (int dt=0;dt<7;dt++)
         #ifdef createTableDetectors
         string descriptorType = descriptorTypes[desct];
         #else
-        string descriptorType = descriptorTypes[0];
+        string descriptorType = descriptorTypes[0];  //0 BRISK
         #endif
         //string descriptorType = descriptorTypes[0];
         //string descriptorType = "BRISK"; // BRISK, BRIEF, ORB, FREAK, AKAZE, SIFT
