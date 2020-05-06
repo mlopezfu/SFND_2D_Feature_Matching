@@ -211,7 +211,8 @@ Your ninth task is to log the time it takes for keypoint detection and descripto
 2. FAST + ORB
 3. SHITOMASI + BRIEF
   
-Four our purpouses of calculate the time to collision I think the fastest are the best combination. For another kind of application where tolerance must be better and we dont have time constraints maybe another combination will work better.
+For our purposes of calculating the time to a collision, I think the fastest is the best combination. For another kind of application where tolerance must be better and we don't have time constraints maybe another combination will work better.
+
 
 * cmake >= 2.8
   * All OSes: [click here for installation instructions](https://cmake.org/install/)
